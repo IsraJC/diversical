@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Add Event</h1>
+    <h4 class="heading">Please fill in the form below to add an event to the calendar.</h4>
     <div>
     <FormulateForm @submit="createEvent">
       <FormulateInput v-model="title" label="Title" validation="required" />
@@ -51,4 +51,8 @@ export default {
 
 <style lang="scss">
   @import '../assets/snow.scss';
+
+  .formulate-form {
+    margin-top: 40px;
+  }
 </style>
