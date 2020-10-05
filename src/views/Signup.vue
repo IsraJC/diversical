@@ -35,7 +35,7 @@
         <button @click="onCancel()" class="button">Cancel</button>
         <button @click="signup()" class="button">Sign Up</button>
       </div>
-      
+
       <div class="extras">
         <a>Back to Log In</a>
       </div>
@@ -77,3 +77,7 @@ methods: {
     }
 }
 </script>
+
+<style lang="scss">
+  @import '../assets/scss/app.scss';
+</style>
