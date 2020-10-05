@@ -159,7 +159,7 @@ export default {
   },
   methods: {
     async getEvents () {
-      let snapshot = await db.collection('events').get()
+      let snapshot = await db.collection('calEvent').get()
       const events = []
       snapshot.forEach(doc => {
         let appData = doc.data()

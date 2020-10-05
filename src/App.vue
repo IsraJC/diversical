@@ -26,19 +26,15 @@
   text-align: center;
   color: #2c3e50;
 }
-
 #nav {
   padding: 30px;
-
   .navbar-custom {
     background-color: #80cbc9;
     margin-bottom: 0px !important;
   }
-
   .nav.navbar-nav {
     width: 100%;
   }
-
   /* links on header */
   .nav.navbar-nav a {
     color: white;
@@ -48,14 +44,12 @@
     display: inline-block;
     padding-top: 10px;
     padding-bottom: 10px;
-
   }
-
   /* links on header when hovered */
   .nav.navbar-nav a:hover {
     color: black;
     background-color: #4ca6a9;
   }
-
 }
 </style>
+
