@@ -31,7 +31,7 @@
   padding: 30px;
 
   .navbar-custom {
-    background-color: #834B6B;
+    background-color: #80cbc9;
     margin-bottom: 0px !important;
   }
 
@@ -54,7 +54,7 @@
   /* links on header when hovered */
   .nav.navbar-nav a:hover {
     color: black;
-    background-color: #A67F95;
+    background-color: #4ca6a9;
   }
 
 }

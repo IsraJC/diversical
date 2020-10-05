@@ -1,5 +1,6 @@
 <template>
   <div class="addevent">
+    <h1></h1>
     <AddEventForm/>
   </div>
 </template>
