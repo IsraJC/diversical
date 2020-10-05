@@ -6,6 +6,7 @@ import './firebase'
 import { auth } from './firebase'
 import VueTextareaAutosize from 'vue-textarea-autosize';
 import 'firebase/firestore';
+import './assets/scss/app.scss'
 
 import VueFormulate from '@braid/vue-formulate'
 import vuetify from './plugins/vuetify';
@@ -26,4 +27,9 @@ auth.onAuthStateChanged(() => {
             render: h => h(App)
         }).$mount('#app')
     }
+
+    if (user) {
+        store.dispatch('fetchUserProfile', user)
+    }
+
 })

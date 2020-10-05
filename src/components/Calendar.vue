@@ -100,6 +100,7 @@
 
 <script>
 import db from '../firebase.js'
+import calEventCollection from '../firebase'
 export default {
   data: () => ({
     today: new Date().toISOString().substr(0, 10),
@@ -159,7 +160,7 @@ export default {
   },
   methods: {
     async getEvents () {
-      let snapshot = await db.collection('calEvent').get()
+      let snapshot = await calEventCollection.get()
       const events = []
       snapshot.forEach(doc => {
         let appData = doc.data()
