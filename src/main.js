@@ -4,10 +4,13 @@ import router from './router'
 import store from './store'
 import './firebase'
 import { auth } from './firebase'
+import VueTextareaAutosize from 'vue-textarea-autosize';
+import 'firebase/firestore';
 
 import VueFormulate from '@braid/vue-formulate'
 
 Vue.use(VueFormulate)
+Vue.use(VueTextareaAutosize);
 
 Vue.config.productionTip = false
 
