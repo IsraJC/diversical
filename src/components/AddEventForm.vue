@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <h4 class="heading">Please fill in the form below to add an event to the calendar.</h4>
-    <div>
-    <FormulateForm @submit="createEvent">
+  <div id="addEvent">
+    <section>
+    
+    <div class="col2" id="addEventcol2">
+    <FormulateForm>
+      <h2>Fill in the form below to add an event</h2>
       <FormulateInput v-model="title" label="Title" validation="required" />
       <FormulateInput type="date" v-model="date" label="Date" validation="required|date" />
       <FormulateInput type="time" v-model="starttime" label="Start Time" validation="required" />
@@ -11,9 +13,10 @@
       <FormulateInput v-model="location" label="Location" validation="optional" />
       <FormulateInput type="url" v-model="meetinglink" label="Online Meeting Link" validation="optional|url" />
       <FormulateInput type="email" v-model="contactemail" label="Contact Email" validation="optional|email" />
-      <FormulateInput type="submit" label="Submit"/>
+      <button @click="createEvent" class="button">Submit</button>
     </FormulateForm>
     </div>
+    </section>
   </div>
 </template>
 
@@ -50,9 +53,9 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '../assets/snow.scss';
-
-  .formulate-form {
-    margin-top: 40px;
+  h2 {
+    padding-bottom: 20px;
   }
+  @import '../assets/LoginFormSCSS/app.scss';
+  @import '../assets/snow.scss'
 </style>

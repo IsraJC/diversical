@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import router from '../router/index'
 import * as fb from '../firebase.js'
+import { auth } from 'firebase'
 
 Vue.use(Vuex)
 
@@ -11,8 +12,8 @@ export default new Vuex.Store({
         userProfile: {}
     },
     mutations: {
-        setEvents(state, val) {
-            state.events = val
+        setEvents: (state, events) => {
+            state.events = events
         },
         //Create the setUserProfile mutations to update the user profile in the state.
         setUserProfile(state, val) {
@@ -29,9 +30,21 @@ export default new Vuex.Store({
                 Description: event.description,
                 Location: event.location,
                 MeetingLink: event.meetinglink,
-                ContactEmail: event.contactemail
+                ContactEmail: event.contactemail,
+                Organisation: userProfile.name
             })
             alert("Event added!")
+        },
+
+        setEvents: async context => {
+            let snapshot = await db.collection('events').get()
+            const events = []
+            snapshot.forEach(doc => {
+                let appData = doc.data()
+                appData.id = doc.id
+                events.push(appData)
+            })
+            context.commit('setEvents', events)
         },
 
         //Create the login and fetchUserProfile actions, these are called methods
@@ -40,7 +53,8 @@ export default new Vuex.Store({
             const { user } = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
 
             // fetch user profile and set in state
-            dispatch('fetchUserProfile', user)
+            dispatch('fetchUserProfile', user);
+            alert("Logged In!")
         },
 
         async fetchUserProfile({ commit }, user) {
@@ -51,7 +65,9 @@ export default new Vuex.Store({
             commit('setUserProfile', userProfile.data())
 
             // change route to dashboard
-            router.push('/')
+            if (router.currentRoute.path === '/login') {
+                router.push('/')
+            }
         },
 
         async signup({ dispatch }, form) {
@@ -61,11 +77,19 @@ export default new Vuex.Store({
             // create user profile object in userCollections
             await fb.usersCollection.doc(user.uid).set({
                 name: form.name,
-                title: form.title
+                description: form.description
             })
 
             // fetch user profile and set in state
             dispatch('fetchUserProfile', user)
+        },
+
+        async logout({ commit }) {
+            await fb.auth.signOut()
+
+            // clear userProfile and redirect to /login
+            commit('setUserProfile', {})
+            router.push('/login')
         }
 
     },

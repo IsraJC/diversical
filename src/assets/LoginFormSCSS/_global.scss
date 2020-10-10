@@ -1,7 +1,10 @@
 // imports
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 // colors
-$primary: #30A0EE;
+$bg-color: #EAEDE8;
+$text-color: #2C302E;
+$primary: white;
+$button: #474A48;
 $error: #ef5777;
 $success: #1abc9c;
 $light: #F5F8FA;
@@ -12,7 +15,7 @@ $white: #fff;
 body {
     margin: 0;
     color: $dark;
-    background: #E6ECF0;
+    background: white;
 }
 
 html {
@@ -66,18 +69,20 @@ p {
 a {
     font-family: 'Open Sans', sans-serif;
     text-decoration: none;
-    color: $primary;
+    color: $button;
     margin: 0;
     cursor: pointer;
     &:hover {
-        color: lighten($primary, 5%);
+        color: lighten($button, 5%);
     }
 }
 
 // globals
 section {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     display: flex;
-    max-width: 1200px;
+    width: 1000px;
+    max-width: 90%;
     margin: 0 auto;
     @media screen and (max-width: 742px) {
         display: block;
@@ -88,7 +93,7 @@ section {
 .col2 {
     flex-grow: 1;
     flex-basis: 0;
-    padding: 1rem;
+    padding: 2rem;
     @media screen and (max-width: 742px) {}
 }
 
@@ -125,22 +130,23 @@ section {
 }
 
 .button {
-    background: $primary;
+    background: $button;
     border: 0;
     outline: 0;
     color: $white;
     padding: 0.8rem 1rem;
+    margin: 10px;
     min-width: 150px;
     font-size: 16px;
     border-radius: 3px;
     cursor: pointer;
     &:hover {
-        background: lighten($primary, 5%);
+        background: lighten($button, 5%);
     }
     &:disabled {
         opacity: 0.5;
         &:hover {
-            background: $primary;
+            background: $button;
         }
     }
 }
@@ -162,21 +168,25 @@ section {
     clear: both;
 }
 
-form {
+form,
+FormulateForm {
+    background-color: $white;
     label {
         display: block;
         font-size: 16px;
         margin-bottom: 0.5rem;
     }
-    input {
+    input,
+    FormulateInput {
         display: block;
         width: 100%;
-        margin-bottom: 1rem;
+        margin-bottom: 3rem;
         font-size: 16px;
         padding: 10px;
         outline: 0;
         border: 1px solid #e6ecf0;
         border-radius: 3px;
+        background-color: #F5F5F5;
         &:focus {
             box-shadow: 0 0 5px 0 rgba($dark, 0.2);
         }

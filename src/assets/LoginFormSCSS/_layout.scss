@@ -32,20 +32,26 @@ header {
 }
 
 // login
-#login {
-    background: linear-gradient(to right, $primary 0%, $primary 50%, $white 50%, $white 100%);
+#login,
+#addEvent {
+    background-color: #EAEDE8;
+    margin-top: 80px;
+    margin-bottom: 30px;
     @media screen and (max-width: 742px) {
         height: 100vh;
         background: $white;
     }
     .col1,
     .col2 {
-        height: 100vh;
-        padding-top: 30vh;
+        height: 85vh;
+        padding-top: 3vh;
         @media screen and (max-width: 742px) {
             height: auto;
             padding-top: 20vh;
         }
+    }
+    #addEventcol2 {
+        height: 135vh;
     }
     .col1 {
         color: $white;
@@ -63,22 +69,27 @@ header {
         }
     }
     .signup-form {
-        padding-top: 20vh;
+        padding-top: 3vh;
         @media screen and (max-width: 742px) {
             padding-top: 10vh;
         }
     }
     .col2 {
+        background-color: #fff;
         h1 {
-            margin-bottom: 2rem;
+            margin-bottom: 4rem;
         }
         form {
-            max-width: 450px;
+            max-width: 800px;
             margin: 0 auto;
+            padding-top: 0px;
+            padding-right: 20px;
+            padding-left: 20px;
         }
         .extras {
-            float: right;
-            text-align: right;
+            padding-top: 20px;
+            float: center;
+            text-align: center;
             a {
                 display: block;
                 margin-bottom: 0.5rem;

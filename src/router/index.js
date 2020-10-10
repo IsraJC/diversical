@@ -23,7 +23,7 @@ const routes = [{
         path: '/login',
         name: 'Login',
         component: () =>
-            import ( /* webpackChunkName: "login" */ '../views/Login.vue')
+            import ( /* webpackChunkName: "login" */ '../views/LoginPage.vue')
     },
     {
         path: '/signup',
@@ -35,10 +35,10 @@ const routes = [{
         path: '/addevent',
         name: 'AddEvent',
         component: () =>
-            import ( /* webpackChunkName: "addevent" */ '../views/AddEvent.vue')
-            /*  meta: {
-                       requiresAuth: true
-                   } */
+            import ( /* webpackChunkName: "addevent" */ '../views/AddEvent.vue'),
+        meta: {
+            requiresAuth: true
+        }
     }
 ]
 

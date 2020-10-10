@@ -1,22 +1,23 @@
 // Formulate inputs
 // -----------------------------------------------------------------------------
 .formulate-input {
-    margin-bottom: 1.5em;
-    font-family: $formulate-font-stack;
+    margin-bottom: 3rem;
+    font-family: 'Open Sans', sans-serif;
     .formulate-input-label {
         display: block;
         line-height: 1.5;
-        font-size: .9em;
+        font-size: 16px;
         font-weight: 600;
-        margin-bottom: .1em;
+        margin-bottom: .2em;
         &--before+.formulate-input-help--before {
             margin-top: -.25em;
             margin-bottom: .75em;
         }
     }
     .formulate-input-element {
-        max-width: 30em;
-        margin-bottom: .1em;
+        max-width: 100%;
+        background-color: #F5F5F5;
+        margin-bottom: 3rem;
         margin: 0 auto;
         display: block;
     }

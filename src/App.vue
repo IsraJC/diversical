@@ -9,27 +9,55 @@
             <router-link to="/">Home</router-link> |
             <router-link to="/calendar">Calendar</router-link> |
             <router-link to="/login">Log In</router-link> |
-            <router-link to="/signup">Sign Up</router-link> |
             <router-link to="/addevent">Add Event</router-link>
-			    </ul>
+            <a v-if="loggedIn" @click="logout()"><span class="glyphicon glyphicon-log-out"></span></a>
+          </ul>
 	    </nav>
     </div>
     <router-view/>
   </div>
 </template>
 
+<script>
+
+import { mapState } from 'vuex'
+
+export default {
+  methods: {
+    logout() {
+      this.$store.dispatch('logout')
+    }
+  },
+  computed: {
+    ...mapState(['userProfile']),
+    loggedIn() {
+      return Object.keys(this.userProfile).length > 1
+    }
+  }
+}
+</script>
+
+
 <style lang="scss">
+
+$bg-color: #EAEDE8;
+$text-color: #2C302E;
+
+html {
+  background-color: $bg-color;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: $text-color;
 }
 #nav {
-  padding: 30px;
+  margin-bottom: 40px;
   .navbar-custom {
-    background-color: #80cbc9;
+    background-color: #358280;
     margin-bottom: 0px !important;
   }
   .nav.navbar-nav {
@@ -47,9 +75,17 @@
   }
   /* links on header when hovered */
   .nav.navbar-nav a:hover {
-    color: black;
-    background-color: #4ca6a9;
+    color: #2C302E;
+    text-decoration: none;
+    background-color: #358280;
+  }
+
+  .nav.navbar-nav a.router-link-exact-active {
+    text-decoration: none;
+    background-color: darken(#358280, 10%);
   }
 }
+
+
 </style>
 
