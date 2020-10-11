@@ -8,7 +8,7 @@
           <h1>Welcome Back</h1>
           <div>
             <label for="email1">Email</label>
-            <input v-model.trim="loginForm.email" type="text" placeholder="you@email.com" id="email1" />
+            <input v-model.trim="loginForm.email" type="text" placeholder="You@email.com" id="email1" />
           </div>
           <div>
             <label for="password1">Password</label>
@@ -24,19 +24,19 @@
           <h1>Get Started</h1>
           <div>
             <label for="name">Organisation Name</label>
-            <input v-model.trim="signupForm.name" type="text" placeholder="Savvy Apps" id="name" />
+            <input v-model.trim="signupForm.name" type="text" placeholder="Code First Girls" id="name" />
           </div>
           <div>
             <label for="description">Organisation Description</label>
-            <input v-model.trim="signupForm.description" type="text" placeholder="Company" id="title" />
+            <input v-model.trim="signupForm.description" type="text" placeholder="Description" id="title" />
           </div>
           <div>
             <label for="email2">Email</label>
-            <input v-model.trim="signupForm.email" type="text" placeholder="you@email.com" id="email2" />
+            <input v-model.trim="signupForm.email" type="text" placeholder="You@email.com" id="email2" />
           </div>
           <div>
             <label for="password2">Password</label>
-            <input v-model.trim="signupForm.password" type="password" placeholder="min 6 characters" id="password2" />
+            <input v-model.trim="signupForm.password" type="password" placeholder="Min 6. characters" id="password2" />
           </div>
           <button @click="signup()" class="button">Sign Up</button>
           <div class="extras">
@@ -54,11 +54,6 @@
 <script>
 
 export default {
-
-  components: {
-    PasswordReset
-  },
-
   data() {
     return {
       loginForm: {

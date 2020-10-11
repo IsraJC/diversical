@@ -38,7 +38,7 @@ export default new Vuex.Store({
                 MeetingLink: event.meetinglink,
                 ContactEmail: event.contactemail,
             })
-            alert("Event added!")
+            alert("Event added successfully!")
             loadEvents()
         },
 
@@ -72,7 +72,7 @@ export default new Vuex.Store({
 
             // fetch user profile and set in state
             dispatch('fetchUserProfile', user);
-            alert("Logged In!")
+            alert("Logged in successfully!")
         },
 
         async fetchUserProfile({ commit }, user) {
@@ -107,7 +107,8 @@ export default new Vuex.Store({
 
             // clear userProfile and redirect to /login
             commit('setUserProfile', {})
-            router.push('/login')
+            alert("Logged out successfully!")
+            router.push('/')
         }
 
     },
