@@ -85,7 +85,7 @@ export default {
   .col2 {
     padding: 0px;
     background-color: white;
-    margin-top:  -120px;
+    margin-top:  -160px;
   } 
   p {
     font-size: 18px;
