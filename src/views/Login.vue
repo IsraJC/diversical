@@ -1,68 +1,110 @@
 <template>
   <div id="login">
-
+    <PasswordReset v-if="showPasswordReset" @close="togglePasswordReset()"></PasswordReset>
     <section>
-
-      <div class="col1">
-        <h1>Log In</h1>
-        <p>Welcome to <a href="" target="_blank">DiversiCal</a> a platform for students and professionals to find development and training events applicable to
-        a diverse audience.</p>
-      </div>
-
-      <div class="col2">
+      <div :class="{ 'signup-form': !showLoginForm }" class="col2">
 
         <form v-if="showLoginForm" @submit.prevent>
-
-        <!--we add submit.prevent so the from doesn't submit as the default behavour of form is a page reload. We wan the login details to save to database without a reload-->
-          <h1>Let's get you back in</h1>
+          <h1>Welcome Back</h1>
           <div>
             <label for="email1">Email</label>
-            <!-- the v-model is how  you bind data in vue.js -->
-            <!-- the .trim is modifier -->
             <input v-model.trim="loginForm.email" type="text" placeholder="you@email.com" id="email1" />
           </div>
-
           <div>
             <label for="password1">Password</label>
             <input v-model.trim="loginForm.password" type="password" placeholder="******" id="password1" />
           </div>
-
-          <!---Create the login logic-->
           <button @click="login()" class="button">Log In</button>
           <div class="extras">
-            <a>Forgot Password</a>
-            <a>Create an Account</a>
+            <a @click="toggleForm()">Create an Account</a>
           </div>
-
         </form>
+
+        <form v-else @submit.prevent>
+          <h1>Get Started</h1>
+          <div>
+            <label for="name">Organisation Name</label>
+            <input v-model.trim="signupForm.name" type="text" placeholder="Savvy Apps" id="name" />
+          </div>
+          <div>
+            <label for="description">Organisation Description</label>
+            <input v-model.trim="signupForm.description" type="text" placeholder="Company" id="title" />
+          </div>
+          <div>
+            <label for="email2">Email</label>
+            <input v-model.trim="signupForm.email" type="text" placeholder="you@email.com" id="email2" />
+          </div>
+          <div>
+            <label for="password2">Password</label>
+            <input v-model.trim="signupForm.password" type="password" placeholder="min 6 characters" id="password2" />
+          </div>
+          <button @click="signup()" class="button">Sign Up</button>
+          <div class="extras">
+            <a @click="toggleForm()">Back to Log In</a>
+          </div>
+        </form>
+
 
       </div>
     </section>
   </div>
 </template>
 
+
 <script>
+
 export default {
+
+  components: {
+    PasswordReset
+  },
+
   data() {
     return {
       loginForm: {
         email: '',
         password: ''
-      }
-    };
-    showLoginForm: true
-  }
-}
-
-methods: {
-  login() 
-  {
-    this.$store.dispatch('login', {
-      email: this.loginForm.email,
-      password: this.loginForm.password
-    })
+      },
+      // add signup form to data() 
+      signupForm: {
+        name: '',
+        description: '',
+        email: '',
+        password: ''
+      },
+      showLoginForm: true,
+      showPasswordReset: false
+    }
+  },
+  methods: {
+    login() {
+      this.$store.dispatch('login', {
+        email: this.loginForm.email,
+        password: this.loginForm.password
+      })
+    },
+    signup() {
+      this.$store.dispatch('signup', {
+        email: this.signupForm.email,
+        password: this.signupForm.password,
+        name: this.signupForm.name,
+        description: this.signupForm.description
+      })
+    },
+    toggleForm() {
+      this.showLoginForm = !this.showLoginForm
+    },
+    togglePasswordReset() {
+      this.showPasswordReset = !this.showPasswordReset
+    }
   }
 }
 
 </script>
 
+<style lang="scss">
+  #login {
+    background-color: #EAEDE8;
+  }
+  @import '../assets/LoginFormSCSS/app.scss'
+</style>

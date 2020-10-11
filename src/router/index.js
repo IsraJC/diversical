@@ -6,6 +6,7 @@ import { auth } from '../firebase'
 Vue.use(VueRouter)
 
 const routes = [{
+
         path: '/',
         name: 'Home',
         component: Home
@@ -23,13 +24,7 @@ const routes = [{
         path: '/login',
         name: 'Login',
         component: () =>
-            import ( /* webpackChunkName: "login" */ '../views/LoginPage.vue')
-    },
-    {
-        path: '/signup',
-        name: 'Signup',
-        component: () =>
-            import ( /* webpackChunkName: "signup" */ '../views/Signup.vue')
+            import ( /* webpackChunkName: "login" */ '../views/Login.vue')
     },
     {
         path: '/addevent',

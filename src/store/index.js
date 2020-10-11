@@ -11,6 +11,11 @@ export default new Vuex.Store({
         events: [],
         userProfile: {}
     },
+    getters: {
+        getUser(state) {
+            return state.userProfile
+        }
+    },
     mutations: {
         setEvents: (state, events) => {
             state.events = events
@@ -21,7 +26,8 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        async addEvent({}, event) {
+        async addEvent({ getters }, event) {
+            let user = getters.getUser
             await fb.eventsCollection.add({
                 Title: event.title,
                 Date: event.date,
@@ -31,20 +37,32 @@ export default new Vuex.Store({
                 Location: event.location,
                 MeetingLink: event.meetinglink,
                 ContactEmail: event.contactemail,
-                Organisation: userProfile.name
             })
             alert("Event added!")
+            loadEvents()
         },
 
-        setEvents: async context => {
-            let snapshot = await db.collection('events').get()
-            const events = []
-            snapshot.forEach(doc => {
-                let appData = doc.data()
-                appData.id = doc.id
-                events.push(appData)
-            })
-            context.commit('setEvents', events)
+        loadEvents({ commit }) {
+            const tempEvents = [];
+            fb.eventsCollection
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        tempEvents.push({
+                            id: doc.id,
+                            title: doc.data().title,
+                            date: doc.data().Date,
+                            starttime: doc.data().StartTime,
+                            endtime: doc.data().StartTime,
+                            description: doc.data().description,
+                            location: doc.data().Location,
+                            meetinglink: doc.data().MeetingLink,
+                            contactemail: doc.data().ContactEmail
+                        });
+                        console.log(doc.id, " => ", doc.data());
+                    });
+                }),
+                commit('setEvents', this.events)
         },
 
         //Create the login and fetchUserProfile actions, these are called methods

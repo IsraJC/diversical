@@ -9,6 +9,7 @@ import 'firebase/firestore';
 
 import VueFormulate from '@braid/vue-formulate'
 import vuetify from './plugins/vuetify';
+import 'vuetify/dist/vuetify.min.css';
 
 Vue.use(VueFormulate)
 Vue.use(VueTextareaAutosize);

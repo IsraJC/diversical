@@ -76,7 +76,7 @@
         >
           <v-card color="grey lighten-4" :width="350" flat>
             <v-toolbar :color="selectedEvent.color" dark>
-              <v-toolbar-title v-html="selectedEvent.name">
+              <v-toolbar-title v-html="selectedEvent.eventTitle">
               </v-toolbar-title>
               <div class="flex-grow-1"></div>
             </v-toolbar>
@@ -112,6 +112,7 @@
 
 import db from '../firebase.js'
 import eventsCollection from '../firebase'
+import { mapState } from 'vuex'
 
 export default {
   data: () => ({
@@ -124,11 +125,10 @@ export default {
       day: 'Day',
       
     },
-    
     title: null,
     description: null,
-    date: null,
-    end: date,
+    start: null,
+    end: null,
     starttime: null,
     endtime: null,
     location: null,
@@ -145,11 +145,18 @@ export default {
     dialogDate: false
   }),
 
+  created () {
+    this.getEvents();
+  },
+
   mounted () {
     this.getEvents()
   },
 
   computed: {
+     ...mapState([
+        'events'
+    ]),
     title () {
       const { date, end } = this
       if (!date || !end) {
@@ -185,14 +192,7 @@ export default {
   methods: {
 
     async getEvents () {
-      let snapshot = await eventsCollection.get()
-      const events = []
-      snapshot.forEach(doc => {
-        let appData = doc.data()
-        appData.id = doc.id
-        events.push(appData)
-      })
-      this.events = events
+     this.$store.dispatch('loadEvents')
     },
 
     setDialogDate( { date }) {
