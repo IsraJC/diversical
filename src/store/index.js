@@ -29,14 +29,17 @@ export default new Vuex.Store({
         async addEvent({ getters }, event) {
             let user = getters.getUser
             await fb.eventsCollection.add({
-                Title: event.title,
-                Date: event.date,
-                StartTime: event.starttime,
-                EndTime: event.endtime,
-                Description: event.description,
-                Location: event.location,
-                MeetingLink: event.meetinglink,
-                ContactEmail: event.contactemail,
+                name: event.name,
+                start: event.start,
+                end: event.end,
+                starttime: event.starttime,
+                endtime: event.endtime,
+                description: event.description,
+                location: event.location,
+                meetinglink: event.meetinglink,
+                contactemail: event.contactemail,
+                color: event.color,
+                organisation: user.name
             })
             alert("Event added successfully!")
             loadEvents()
@@ -50,14 +53,16 @@ export default new Vuex.Store({
                     querySnapshot.forEach((doc) => {
                         tempEvents.push({
                             id: doc.id,
-                            title: doc.data().title,
-                            date: doc.data().Date,
-                            starttime: doc.data().StartTime,
-                            endtime: doc.data().StartTime,
+                            name: doc.data().name,
+                            start: doc.data().start,
+                            end: doc.data().end,
+                            starttime: doc.data().starttime,
+                            endtime: doc.data().endtime,
                             description: doc.data().description,
-                            location: doc.data().Location,
-                            meetinglink: doc.data().MeetingLink,
-                            contactemail: doc.data().ContactEmail
+                            location: doc.data().location,
+                            meetinglink: doc.data().meetinglink,
+                            contactemail: doc.data().contactemail,
+                            color: doc.data().color
                         });
                         console.log(doc.id, " => ", doc.data());
                     });
@@ -69,6 +74,17 @@ export default new Vuex.Store({
         async login({ dispatch }, form) {
             // sign user in
             const { user } = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
+                .catch(function(error) {
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    if (errorCode === 'auth/wrong-password') {
+                        alert('Wrong password.');
+                    } else {
+                        alert(errorMessage);
+                    }
+                    console.log(error);
+                });
 
             // fetch user profile and set in state
             dispatch('fetchUserProfile', user);
@@ -100,6 +116,13 @@ export default new Vuex.Store({
 
             // fetch user profile and set in state
             dispatch('fetchUserProfile', user)
+
+            // change route to dashboard
+            if (router.currentRoute.path === '/login') {
+                router.push('/')
+            }
+
+            alert("Account successfully created!")
         },
 
         async logout({ commit }) {

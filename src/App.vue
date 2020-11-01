@@ -11,10 +11,10 @@
             </ul>
             <router-link to="/">Home</router-link> |
             <router-link to="/calendar">Calendar</router-link> |
-            <router-link to="/addevent">Add Event</router-link> |
-            <router-link to="/login">Log In</router-link>
+            <router-link to="/addevent">Add Event</router-link>
             <ul class="navbar-nav navbar-right"> 
               <a v-if="loggedIn" @click="logout()"><span class="glyphicon glyphicon-log-out"></span></a>
+              <router-link v-else to="/login">Log In</router-link>
             </ul>
           </ul>
 	    </nav>
@@ -26,6 +26,7 @@
 <script>
 
 import { mapState } from 'vuex'
+import { auth } from 'firebase' 
 
 export default {
   methods: {
@@ -34,12 +35,19 @@ export default {
     }
   },
   computed: {
-    ...mapState(['userProfile']),
-    loggedIn() {
-      return Object.keys(this.userProfile).length > 1
+    loggedIn: function() {
+      console.log("user: " + auth.currentUser)
+      if (auth.currentUser) {
+        return true
+      }
+      else {
+        return false
+      }
     }
   }
 }
+
+
 </script>
 
 
@@ -97,4 +105,3 @@ html {
 }
 
 </style>
-

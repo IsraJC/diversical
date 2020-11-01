@@ -47,6 +47,7 @@ router.beforeEach((to, from, next) => {
 
     if (requiresAuth && !auth.currentUser) {
         next('/login')
+        alert("Please log in first.")
     } else {
         next()
     }
