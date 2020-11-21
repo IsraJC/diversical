@@ -9,20 +9,30 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         events: [],
-        userProfile: {}
+        userProfile: {},
+        userID: null
     },
     getters: {
         getUser(state) {
             return state.userProfile
+        },
+        getUserID(state) {
+            return state.userID
+        },
+        getEvents(state) {
+            return state.events
         }
     },
     mutations: {
-        setEvents: (state, events) => {
+        setEvents(state, events) {
             state.events = events
         },
         //Create the setUserProfile mutations to update the user profile in the state.
         setUserProfile(state, val) {
             state.userProfile = val
+        },
+        setUserID(state, val) {
+            state.userID = val
         }
     },
     actions: {
@@ -39,35 +49,24 @@ export default new Vuex.Store({
                 meetinglink: event.meetinglink,
                 contactemail: event.contactemail,
                 color: event.color,
-                organisation: user.name
+                organisation: getters.getUserID
             })
             alert("Event added successfully!")
-            loadEvents()
         },
 
-        loadEvents({ commit }) {
-            const tempEvents = [];
-            fb.eventsCollection
-                .get()
-                .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        tempEvents.push({
-                            id: doc.id,
-                            name: doc.data().name,
-                            start: doc.data().start,
-                            end: doc.data().end,
-                            starttime: doc.data().starttime,
-                            endtime: doc.data().endtime,
-                            description: doc.data().description,
-                            location: doc.data().location,
-                            meetinglink: doc.data().meetinglink,
-                            contactemail: doc.data().contactemail,
-                            color: doc.data().color
-                        });
-                        console.log(doc.id, " => ", doc.data());
-                    });
-                }),
-                commit('setEvents', this.events)
+        async getEvents({ commit }) {
+            //get snapshot
+            let snapshot = await fb.eventsCollection.get()
+                //loop over snapshot and get each document
+            let events = []
+            snapshot.forEach(doc => {
+                    //data doesn't include ID
+                    let appData = doc.data();
+                    appData.id = doc.id;
+                    events.push(appData);
+                })
+                //sets events array in data to events array created in this method
+            commit('setEvents', events)
         },
 
         //Create the login and fetchUserProfile actions, these are called methods
@@ -97,6 +96,7 @@ export default new Vuex.Store({
 
             // set user profile in state
             commit('setUserProfile', userProfile.data())
+            commit('setUserID', user.uid)
 
             // change route to dashboard
             if (router.currentRoute.path === '/login') {
@@ -111,7 +111,8 @@ export default new Vuex.Store({
             // create user profile object in userCollections
             await fb.usersCollection.doc(user.uid).set({
                 name: form.name,
-                description: form.description
+                description: form.description,
+                email: form.email
             })
 
             // fetch user profile and set in state
@@ -132,6 +133,34 @@ export default new Vuex.Store({
             commit('setUserProfile', {})
             alert("Logged out successfully!")
             router.push('/')
+        },
+
+        async saveProfile({ state, dispatch }, newProfile, user) {
+            fb.usersCollection.doc(state.userID)
+                .update({ name: newProfile.name, description: newProfile.description })
+                .then(() => {
+                    alert("Profile successfully saved")
+                })
+            dispatch('fetchUserProfile', user)
+        },
+
+        async saveAccountDetails({ dispatch }, newDetails, user) {
+            auth().currentUser.updateEmail(newDetails.email)
+            auth().currentUser.updatePassword(newDetails.password).then(function() {
+                alert("Account details successfully updated")
+            }).catch(function(error) {
+                alert("An error occurred: " + error)
+            });
+            dispatch('fetchUserProfile', user)
+        },
+        async deleteAccount({ dispatch }) {
+            auth().currentUser.delete().then(function() {
+                alert("Account successfully deleted")
+            }).catch(function(error) {
+                alert("An error occurred: " + error)
+            });
+            dispatch('fetchUserProfile', user)
+            router.push('/login')
         }
 
     },

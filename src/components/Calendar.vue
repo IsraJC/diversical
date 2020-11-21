@@ -1,5 +1,5 @@
 <template>
-  <v-row class="fill-height">
+  <v-row class="ma-2 fill-height">
     <v-col>
       <v-sheet height="64">
         <v-toolbar
@@ -103,15 +103,15 @@
             >
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn icon>
+              <!-- <v-btn icon>
                 <v-icon>mdi-heart</v-icon>
-              </v-btn>
-              <v-btn icon>
+              </v-btn> -->
+              <!-- <v-btn icon>
                 <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
+              </v-btn> -->
             </v-toolbar>
              <v-card-text>
-              Organisation: <span v-html="selectedEvent.organisation"></span>
+              Organisation: <span v-html="selectedEvent.organisationName"></span>
             </v-card-text>
             <v-card-text>
               Description: <span v-html="selectedEvent.description"></span>
@@ -143,6 +143,7 @@
 
 <script>
 import { db } from '@/firebase.js'
+import * as fb from '../firebase.js'
 
 export default {
   data: () => ({
@@ -181,21 +182,22 @@ export default {
   //gets called when the component is mounted
   mounted() {
     this.getEvents();
+    window.scrollTo(0,0);
+    document.documentElement.style.overflow = 'hidden';
+  },
+  beforeDestroy() {
+    document.documentElement.style.overflow = 'auto';
   },
   methods: {
     async getEvents() {
-      //get snapshot
-      let snapshot = await db.collection("events").get();
-      //loop over snapshot and get each document
-      let events = [];
-      snapshot.forEach(doc => {
-        //data doesn't include ID
-        let appData = doc.data();
-        appData.id = doc.id;
-        events.push(appData);
-      })
-      //sets events array in data to events array created in this method
-      this.events = events;
+      this.$store.dispatch('getEvents')
+      this.events = this.$store.getters.getEvents
+      
+      for (event of this.events) {
+        var user = await fb.usersCollection.doc(event.organisation).get()
+        event.organisationName = user.data().name
+      }
+      console.log(this.events)
     },
     viewDay ({ date }) {
       this.focus = date
@@ -263,3 +265,16 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .v-card__text {
+    font-size: 12px;
+    padding-bottom: 0px;
+    font-weight: bold;
+    span {
+      font-weight: normal;
+    }
+  }
+  
+
+</style>

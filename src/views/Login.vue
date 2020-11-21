@@ -99,6 +99,7 @@ export default {
 <style lang="scss">
   #login {
     background-color: #EAEDE8;
+    padding-top: 6vh!important;
   }
   @import '../assets/LoginFormSCSS/app.scss'
 </style>

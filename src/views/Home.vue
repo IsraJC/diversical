@@ -103,6 +103,7 @@ export default {
   #col-md-6 {
     margin-top: -100px;
   }
+  
   @import '../assets/LoginFormSCSS/app.scss';
   
 </style>

@@ -1,0 +1,428 @@
+<template>
+  <div class="fill-height">
+  
+  
+  <v-container fluid ma-0 pa-0 class="container">
+  <v-row no-gutters class="fill-height">
+  <v-col cols="2">
+    <v-card class="fill-height">
+      <v-navigation-drawer class="nav-drawer"
+        permanent
+        left
+      >
+        <v-list>
+          <v-list-item>
+            <v-list-item-avatar size="50" class="avatar">
+              <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
+            </v-list-item-avatar>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title class="title">
+                {{ user.name }}
+              </v-list-item-title>
+              <v-list-item-subtitle class="email">{{ user.email }}</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+
+        <v-divider class="divider"></v-divider>
+
+        <v-list
+          nav
+        >
+          <v-list-item link @click="view='My Account'">
+            <v-list-item-icon>
+              <v-icon>mdi-account-cog</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title class="nav-title">My Account</v-list-item-title>
+          </v-list-item>
+          <v-list-item link @click="view='My Events'">
+            <v-list-item-icon>
+              <v-icon>mdi-calendar-multiple</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title class="nav-title">My Events</v-list-item-title>
+          </v-list-item>
+          <!-- <v-list-item link>
+            <v-list-item-icon>
+              <v-icon>mdi-star</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Starred</v-list-item-title>
+          </v-list-item> -->
+        </v-list>
+      </v-navigation-drawer>
+    </v-card>
+    </v-col>
+
+    <!-- My Account -->
+    <v-col  v-if="view=='My Account'" cols="10" class="fill-height">
+
+    <v-card elevation="2" class="content">
+      <form @submit.prevent class="form">
+        <h2>Organisation Profile</h2>
+        <div>
+          <label for="name">Organisation Name</label>
+          <input type="text" v-model.trim="organisationDetails.name" :placeholder="organisationDetails.name" id="name" />
+        </div>
+        <div>
+          <label for="description">Organisation Description</label>
+          <input v-model.trim="organisationDetails.description" type="text" :placeholder="organisationDetails.description" id="title" />
+        </div>
+        <div class="clearfix">
+          <button @click="saveProfile()" class="button" id="save-button">Save</button>
+        </div>
+      </form>
+    </v-card>
+
+    <v-card elevation="2" class="content">
+      <form @submit.prevent class="form">
+        <h2>Account Details</h2>
+        <div>
+          <label for="email">Email Address</label>
+          <input type="email" v-model.trim="accountDetails.email" :placeholder="accountDetails.email" id="email" />
+        </div>
+        <div>
+          <label for="description">Password</label>
+          <input v-model.trim="accountDetails.password" type="password" id="password" />
+        </div>
+        <div>
+          <label for="description">Confirm Password</label>
+          <input v-model.trim="accountDetails.confirmPassword" type="password" id="confirmPassword" />
+        </div>
+        <div class="clearfix">
+          <button @click="saveDetails()" class="button" id="save-button">Save</button>
+          <button @click="dialog=true" class="button" id="delete-account-button">Delete Account</button>
+        </div>
+      </form>
+    </v-card>
+
+    <v-dialog
+      v-model="dialog"
+      persistent
+      max-width="290"
+      id="delete-account-dialog"
+    >
+      <v-card>
+        <v-card-title class="dialogTitle">
+          Delete Account
+        </v-card-title>
+        <v-card-text class="dialogText">Are you sure you want to delete your account?</v-card-text>
+        <v-card-actions>
+          <v-btn
+            class="dialogButton"
+            color="red darken-1"
+            text
+            @click="dialog = false"
+          >
+            No
+          </v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            class="dialogButton"
+            color="green darken-1"
+            text
+            @click="deleteAccount()"
+          >
+            Yes
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+  </v-col>
+
+  <!-- My Events -->
+  <v-col  v-if="view=='My Events'" cols="10" class="fill-height">
+
+    <v-card elevation="2" class="content">
+      <h2>Events</h2>
+      <v-list class="eventsList">
+        <v-list-item-group v-model="model">
+          <div v-for="event in userEvents" :key="event.name">
+            <v-divider class="divider"></v-divider>
+            <div class="clearfix event">
+              <v-list-item> 
+                <v-list-item-content class="eventContent">
+                  <v-list-item-title class="eventTitle">{{ event.name }}</v-list-item-title>
+                  <v-list-item-subtitle class="eventDetails"> {{event.start}}</v-list-item-subtitle>
+                </v-list-item-content>
+                <v-list-item-icon>
+                  <v-icon class="chevron">mdi-chevron-right</v-icon>
+                </v-list-item-icon>
+              </v-list-item>
+              
+            </div>
+          </div>
+        </v-list-item-group>
+      </v-list>
+    </v-card>
+
+  </v-col>
+  
+
+  </v-row>
+  </v-container>
+  </div>
+</template>
+
+<script>
+import { auth } from '../firebase.js'
+
+export default {
+  data: () => ({
+    user: null,
+    dialog: false,
+    view: "My Account",
+    model: 1,
+    events: [],
+    userEvents: [],
+    organisationDetails: {
+      name: null,
+      description: null
+    },
+    accountDetails: {
+      email: null,
+      password: null,
+      confirmPassword: null
+    }
+  }),
+  mounted() {
+    const app = document.createElement('div');
+    app.setAttribute('data-app', true);
+    document.body.append(app);
+    this.user = this.$store.getters.getUser;
+    this.organisationDetails = this.user;
+    this.accountDetails.email = auth.currentUser.email;
+    this.$store.dispatch('getEvents');
+    this.events = this.$store.getters.getEvents;
+    this.filterEvents();
+  },
+  beforeDestroy() {
+    document.documentElement.style.overflow = 'auto';
+  },
+  methods: {
+    saveProfile() {
+      this.$store.dispatch('saveProfile', this.organisationDetails, this.user)
+    },
+    saveDetails() {
+      if (this.accountDetails.password == null || this.accountDetails.confirmPassword == null) {
+        alert("Please enter your password and confirm it to save")
+      }
+      else if (this.accountDetails.password == this.accountDetails.confirmPassword) {
+        this.$store.dispatch('saveAccountDetails', this.accountDetails, this.user)
+      } else {
+        alert("The passwords do not match.")
+      }
+    },
+    deleteAccount() {
+      if (this.accountDetails.password == null || this.accountDetails.confirmPassword == null) {
+        this.dialog = false;
+        alert("Please enter your password and confirm it to delete your account.")
+      }
+      else if (this.accountDetails.password == this.accountDetails.confirmPassword) {
+        this.dialog = false;
+        auth.signInWithEmailAndPassword(this.accountDetails.email, this.accountDetails.password)
+        .then((user) => {
+         this.$store.dispatch('deleteAccount');
+      })
+      .catch((error) => {
+        this.dialog=false
+        var errorCode = error.code
+        var errorMessage = error.message
+        alert("An error occurred: " + errorMessage)
+      });
+      } else {
+        this.dialog=false;
+        alert("The passwords do not match.")
+      }
+    },
+    filterEvents() {
+      var list = [];
+      
+      for (var i of this.events) {
+        if (i.organisation == this.$store.getters.getUserID) {
+          list.push(i)
+        }
+      }
+      this.userEvents = list
+      console.log(this.userEvents)
+      
+    }
+    
+  }
+}
+</script>
+
+
+<style lang="scss" scoped>
+
+  
+
+  template {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .email {
+    font-size: 12px;
+    padding: 0.5vh;
+  }
+
+  .nav-title {
+    font-size: 12px;
+  }
+
+  .divider {
+    margin: 0vh;
+  }
+
+  .avatar {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3vh;
+  }
+
+  .container {
+    width:  100%;
+    height: 115vh;
+    margin: 0vh;
+    margin-right: 0px;
+    margin-top: -1vh;
+    background-color: #EAEDE8;
+  }
+
+  .content {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5vh;
+    width:  80%;
+    padding: 1vh;
+  }
+
+  .nav-drawer {
+    width: 100%!important;
+    height: 114vh!important;
+  }
+
+  .form {
+    h2 {
+      margin-bottom: 2vh;
+    }
+    padding-left: 5vh;
+    label {
+     float: left;
+     text-align: left;
+     width: 20%;
+     margin-bottom: 3rem;
+     line-height: 6vh;
+    }
+    input {
+      width: 70%;
+      margin-bottom: 3rem;
+      font-size: 16px;
+      float: right;
+      padding: 1.5vh;
+      margin-right: 5vh;
+      outline: 0;
+      border: 1px solid #e6ecf0;
+      border-radius: 3px;
+      background-color: #F5F5F5;
+      &:focus {
+          box-shadow: 0 0 5px 0 rgba(#34495E, 0.2);
+      } 
+    }
+    div {
+       width:  100%;
+    }
+  }
+
+  .button {
+  background: #474A48;
+  border: 0;
+  outline: 0;
+  color: white;
+  padding: 0.8rem 1rem;
+  float: right;
+  clear: right;
+  margin-right: 5vh;  
+  margin-bottom: 2vh;
+  min-width: 150px;
+  font-size: 16px;
+  border-radius: 3px;
+  cursor: pointer;
+  &:hover {
+      background: lighten(#474A48, 5%);
+  }
+  &:disabled {
+      opacity: 0.5;
+      &:hover {
+          background: #474A48;
+      }
+  }  
+}
+#delete-account-button {
+  background: #b71c1c;
+  &:hover {
+      background: lighten(#b71c1c, 5%);
+  }
+  &:disabled {
+      opacity: 0.5;
+      &:hover {
+          background: #b71c1c;
+      }
+  }
+  float: left; 
+  clear: left;
+  margin-left: 0vh;  
+}
+
+.dialogTitle {
+  font-size: 18px!important;
+  text-align: center!important;
+  display: block;
+}
+.dialogText {
+  font-size: 12px!important;
+  text-align: center;
+  padding-top: 2vh!important;
+  padding-bottom: 1vh!important;
+}
+.dialogButton {
+  margin-right: 1vh;
+  margin-left: 1vh;
+  font-size: 9.5px;
+}
+.eventTitle {
+  font-size: 16px;
+  padding: 0.5vh;
+  text-align: left;
+}
+.eventDetails {
+  font-size:  10px;
+  padding: 0.5vh;
+  text-align: left;
+}
+.chevron {
+  font-size: 4vh;
+  display: inline-flex;
+  vertical-align: middle;
+  margin: 0px;
+}
+.event {
+  padding: 0vh;
+}
+h2 {
+  padding: 0vh;
+}
+.eventContent {
+  padding: 0vh;
+}    
+  
+  
+</style>

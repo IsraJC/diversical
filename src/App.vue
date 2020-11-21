@@ -7,14 +7,18 @@
       <nav class="navbar navbar-custom navbar-fixed-top" style> 
 			    <ul class="nav navbar-nav navbar-center">
             <ul class="navbar-nav navbar-left"> 
-              <a></a>
+              <a class="disabled"></a>
+              <a class="disabled"></a>
             </ul>
             <router-link to="/">Home</router-link> |
             <router-link to="/calendar">Calendar</router-link> |
             <router-link to="/addevent">Add Event</router-link>
             <ul class="navbar-nav navbar-right"> 
-              <a v-if="loggedIn" @click="logout()"><span class="glyphicon glyphicon-log-out"></span></a>
-              <router-link v-else to="/login">Log In</router-link>
+              <div  v-show="user">
+                <router-link to="/account" class="leftIcons"><v-icon> mdi-account-circle </v-icon></router-link> |
+                <a @click="logout()" class="leftIcons" id="logout"><span class="glyphicon glyphicon-log-out"></span></a>
+              </div>
+              <router-link v-show="!user" to="/login">Sign In</router-link>
             </ul>
           </ul>
 	    </nav>
@@ -26,25 +30,28 @@
 <script>
 
 import { mapState } from 'vuex'
-import { auth } from 'firebase' 
+import * as firebase from 'firebase/app'
 
 export default {
+  data () {
+    return {
+      user: ''
+    };
+  },
   methods: {
     logout() {
       this.$store.dispatch('logout')
     }
   },
-  computed: {
-    loggedIn: function() {
-      console.log("user: " + auth.currentUser)
-      if (auth.currentUser) {
-        return true
-      }
-      else {
-        return false
-      }
-    }
-  }
+  created: function () {
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          this.user = true;
+        } else {
+          this.user = false;
+        }
+      });
+   }
 }
 
 
@@ -56,8 +63,9 @@ export default {
 $bg-color: #EAEDE8;
 $text-color: #2C302E;
 
-html {
+html, body {
   background-color: $bg-color;
+  height: 94vh;
 }
 
 #app {
@@ -66,30 +74,29 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: $text-color;
+  height: 94vh;
 }
 #nav {
-  margin-bottom: 40px;
+  
+  height: 6vh;
+  position: relative;
   .navbar-custom {
     background-color: #358280;
-    margin-bottom: 0px !important;
+    margin-bottom: 0vh !important;
   }
   .nav.navbar-nav {
     width: 100%;
   }
-  .navbar-nav.navbar-center {
-    position: relative;
-    left:50%;
-    transform: translatex(-50%);
-  }
+ 
   /* links on header */
   .nav.navbar-nav a {
     color: white;
-    padding-left: 40px;
-    padding-right: 40px;
+    padding-left: 5vh;
+    padding-right: 5vh;
     font-size: 14pt;
     display: inline-block;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 1.5vh;
+    padding-bottom: 1.5vh;
   }
   /* links on header when hovered */
   .nav.navbar-nav a:hover {
@@ -102,6 +109,26 @@ html {
     text-decoration: none;
     background-color: darken(#358280, 10%);
   }
+
+  .v-icon {
+    color: white;
+    
+  }
+  .v-icon:hover {
+      color: #2C302E!important;
+  }
+
+  .leftIcons {
+    padding-left: 2.5vh!important;
+    padding-right: 2.5vh!important;
+  }
+  #logout {
+    padding-right: 4vh!important;
+  }
+  .disabled {
+    pointer-events: none;
+  }
+
 }
 
 </style>
