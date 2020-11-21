@@ -62,15 +62,19 @@
       <form @submit.prevent class="form">
         <h2>Organisation Profile</h2>
         <div>
-          <label for="name">Organisation Name</label>
-          <input type="text" v-model.trim="organisationDetails.name" :placeholder="organisationDetails.name" id="name" />
+          <v-container class="formItemContainer">
+            <div class="formItemLabel"><label for="name">Organisation Name</label></div>
+            <div class="formItemInput"><input type="text" v-model.trim="organisationDetails.name" :placeholder="organisationDetails.name" id="name"/></div>
+          </v-container>
         </div>
         <div>
-          <label for="description">Organisation Description</label>
-          <input v-model.trim="organisationDetails.description" type="text" :placeholder="organisationDetails.description" id="title" />
+          <v-container class="formItemContainer">
+            <div class="formItemLabel"><label for="description">Organisation Description</label></div>
+            <div class="formItemInput"><input v-model.trim="organisationDetails.description" type="text" :placeholder="organisationDetails.description" id="title"/></div>
+          </v-container>
         </div>
         <div class="clearfix">
-          <button @click="saveProfile()" class="button" id="save-button">Save</button>
+          <button @click="saveProfile()" class="button buttonRight" id="save-button">Save</button>
         </div>
       </form>
     </v-card>
@@ -79,20 +83,30 @@
       <form @submit.prevent class="form">
         <h2>Account Details</h2>
         <div>
-          <label for="email">Email Address</label>
-          <input type="email" v-model.trim="accountDetails.email" :placeholder="accountDetails.email" id="email" />
+          <v-container class="formItemContainer">
+            <div class="formItemLabel"><label for="email">Email Address</label></div>
+            <div class="formItemInput"><input type="email" v-model.trim="accountDetails.email" :placeholder="accountDetails.email" id="email"/></div>
+          </v-container>
         </div>
         <div>
-          <label for="description">Password</label>
-          <input v-model.trim="accountDetails.password" type="password" id="password" />
+          <v-container class="formItemContainer">
+            <div class="formItemLabel"><label for="description">Password</label></div>
+            <div class="formItemInput"><input v-model.trim="accountDetails.password" type="password" id="password" /></div>
+          </v-container>
         </div>
         <div>
-          <label for="description">Confirm Password</label>
-          <input v-model.trim="accountDetails.confirmPassword" type="password" id="confirmPassword" />
+          <v-container class="formItemContainer">
+            <div class="formItemLabel"><label for="description">Confirm Password</label></div>
+            <div class="formItemInput"><input v-model.trim="accountDetails.confirmPassword" type="password" id="confirmPassword" /></div>
+          </v-container>
         </div>
         <div class="clearfix">
-          <button @click="saveDetails()" class="button" id="save-button">Save</button>
-          <button @click="dialog=true" class="button" id="delete-account-button">Delete Account</button>
+          <v-container class="formItemContainer">
+            <div class="twoButtons">
+              <button @click="dialog=true" class="button buttonLeft" id="delete-account-button">Delete Account</button>
+              <button @click="saveDetails()" class="button buttonRight" id="save-button">Save</button>
+            </div>
+          </v-container>
         </div>
       </form>
     </v-card>
@@ -314,21 +328,19 @@ export default {
     h2 {
       margin-bottom: 2vh;
     }
-    padding-left: 5vh;
     label {
      float: left;
      text-align: left;
-     width: 20%;
-     margin-bottom: 3rem;
+     width: 100%;
+     margin: 1rem;
      line-height: 6vh;
     }
     input {
-      width: 70%;
-      margin-bottom: 3rem;
+      width: 100%;
+      margin: 1rem;
       font-size: 16px;
       float: right;
       padding: 1.5vh;
-      margin-right: 5vh;
       outline: 0;
       border: 1px solid #e6ecf0;
       border-radius: 3px;
@@ -340,6 +352,36 @@ export default {
     div {
        width:  100%;
     }
+    .formItemContainer {
+      all: revert;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1vh;
+      padding-right: 3vh;
+      padding-left: 3vh;
+    }
+    .formItemLabel {
+      flex-basis: 30%;
+    }
+    .formItemInput {
+      flex-basis: 70%;
+    }
+    .twoButtons {
+      .button {
+        margin-right: 1vh;
+        margin-left: 1vh;
+      }
+    }
+    .buttonRight {
+      float: right;
+      clear: right;
+    }
+    .buttonLeft {
+      float: left;
+      clear: left;
+    }
+
   }
 
   .button {
@@ -348,9 +390,9 @@ export default {
   outline: 0;
   color: white;
   padding: 0.8rem 1rem;
-  float: right;
-  clear: right;
-  margin-right: 5vh;  
+  margin-right: 4vh;
+  margin-left: 4vh;
+  margin-top: 2vh;
   margin-bottom: 2vh;
   min-width: 150px;
   font-size: 16px;
@@ -377,9 +419,6 @@ export default {
           background: #b71c1c;
       }
   }
-  float: left; 
-  clear: left;
-  margin-left: 0vh;  
 }
 
 .dialogTitle {
