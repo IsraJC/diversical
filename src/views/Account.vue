@@ -103,7 +103,7 @@
         <div class="clearfix">
           <v-container class="formItemContainer">
             <div class="twoButtons">
-              <button @click="dialog=true" class="button buttonLeft" id="delete-account-button">Delete Account</button>
+              <button @click="itemToDelete='account' ; dialog=true" class="button buttonLeft" id="delete-account-button">Delete Account</button>
               <button @click="saveDetails()" class="button buttonRight" id="save-button">Save</button>
             </div>
           </v-container>
@@ -111,17 +111,115 @@
       </form>
     </v-card>
 
-    <v-dialog
+  </v-col>
+
+  <!-- My Events -->
+  <v-col  v-if="view=='My Events'" cols="10" class="fill-height">
+
+    <v-card elevation="2" class="content">
+      <h2>Events</h2>
+      <v-list class="eventsList">
+        <v-list-item-group v-model="model">
+          <div v-for="event in userEvents" :key="event.name">
+            <v-divider class="divider"></v-divider>
+            <div class="clearfix event">
+              <v-list-item @click="selectedEvent=event ; view='Edit Event'"> 
+                <v-list-item-content class="eventContent">
+                  <v-list-item-title class="eventTitle">{{ event.name }}</v-list-item-title>
+                  <v-list-item-subtitle class="eventDetails"> {{event.start}}</v-list-item-subtitle>
+                </v-list-item-content>
+                <v-list-item-icon>
+                  <v-icon class="chevron">mdi-chevron-right</v-icon>
+                </v-list-item-icon>
+              </v-list-item>
+            </div>
+          </div>
+        </v-list-item-group>
+      </v-list>
+    </v-card>
+  </v-col>
+  
+  <!-- Edit Event -->
+  <v-col  v-if="view=='Edit Event'" cols="10" class="fill-height">
+
+    <v-card elevation="2" class="content">
+      <form @submit.prevent class="form">
+        <h2>Edit Event</h2>
+        <div>
+          <v-container class="formItemContainer">
+            <div class="formItemLabel"><label for="name">Title*</label></div>
+            <div class="formItemInput"><input v-model.trim="selectedEvent.name" type="text" :placeholder="selectedEvent.name" id="name" required /></div>
+          </v-container>
+        </div>
+        <div>
+          <v-container class="formItemContainer">
+            <div class="formItemLabel"><label for="start">Start*</label></div>
+            <div class="formItemInput"><input v-model.trim="selectedEvent.start" type="datetime-local" :placeholder="selectedEvent.start" id="start" required /></div>
+          </v-container>
+        </div>
+        <div>
+          <v-container class="formItemContainer">
+            <div class="formItemLabel"><label for="end">End*</label></div>
+            <div class="formItemInput"><input v-model.trim="selectedEvent.end" type="datetime-local" :placeholder="selectedEvent.end" id="end" required /></div>
+          </v-container>
+        </div>
+        <div>
+          <v-container class="formItemContainer">
+            <div class="formItemLabel"><label for="description">Description*</label></div>
+            <div class="formItemInput"><textarea v-model.trim="selectedEvent.description" :placeholder="selectedEvent.description" id="descripion" required /></div>
+          </v-container>
+        </div>
+        <div>
+          <v-container class="formItemContainer">
+            <div class="formItemLabel"><label for="location">Location</label></div>
+            <div class="formItemInput"><input v-model.trim="selectedEvent.location" type="text" :placeholder="selectedEvent.location" id="location" /></div>
+          </v-container>
+        </div>
+        <div>
+          <v-container class="formItemContainer">
+            <div class="formItemLabel"><label for="meetinglink">Meeting Link</label></div>
+            <div class="formItemInput"><input v-model.trim="selectedEvent.meetinglink" type="url" :placeholder="selectedEvent.meetinglink" id="meetinglink" /></div>
+          </v-container>
+        </div>
+        <div>
+          <v-container class="formItemContainer">
+            <div class="formItemLabel"><label for="contactemail">Contact Email</label></div>
+            <div class="formItemInput"><input v-model.trim="selectedEvent.contactemail" type="email" :placeholder="selectedEvent.contactemail" id="contactemail" /></div>
+          </v-container>
+        </div>
+        <div>
+          <v-container class="formItemContainer">
+            <div class="formItemLabel"><label for="color">Colour</label></div>
+            <div class="formItemInput"><input v-model.trim="selectedEvent.color" type="color" :placeholder="selectedEvent.color" id="color" /></div>
+          </v-container>
+        </div>
+        <div class="clearfix">
+          <v-container class="formItemContainer">
+            <div class="twoButtons">
+              <button @click="itemToDelete='event' ; dialog=true" class="button buttonLeft" id="delete-event-button">Delete Event</button>
+              <button @click="updateEvent()" class="button buttonRight" id="save-button">Save</button>
+            </div>
+          </v-container>
+        </div>
+      </form>
+    </v-card>
+
+  </v-col>
+
+  <v-dialog
       v-model="dialog"
       persistent
       max-width="290"
-      id="delete-account-dialog"
-    >
+      id="delete-account-dialog">
       <v-card>
-        <v-card-title class="dialogTitle">
+        <v-card-title v-show="itemToDelete='account'" class="dialogTitle">
           Delete Account
         </v-card-title>
-        <v-card-text class="dialogText">Are you sure you want to delete your account?</v-card-text>
+        <v-card-title v-show="itemToDelete='event'" class="dialogTitle">
+          Delete Event
+        </v-card-title>
+        <v-card-text v-show="itemToDelete='account'" class="dialogText">Are you sure you want to delete your account?</v-card-text>
+        <v-card-text v-show="itemToDelete='event'" class="dialogText">Are you sure you want to delete this event?</v-card-text>
         <v-card-actions>
           <v-btn
             class="dialogButton"
@@ -136,44 +234,13 @@
             class="dialogButton"
             color="green darken-1"
             text
-            @click="deleteAccount()"
+            @click="deleteItem()"
           >
             Yes
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-  </v-col>
-
-  <!-- My Events -->
-  <v-col  v-if="view=='My Events'" cols="10" class="fill-height">
-
-    <v-card elevation="2" class="content">
-      <h2>Events</h2>
-      <v-list class="eventsList">
-        <v-list-item-group v-model="model">
-          <div v-for="event in userEvents" :key="event.name">
-            <v-divider class="divider"></v-divider>
-            <div class="clearfix event">
-              <v-list-item> 
-                <v-list-item-content class="eventContent">
-                  <v-list-item-title class="eventTitle">{{ event.name }}</v-list-item-title>
-                  <v-list-item-subtitle class="eventDetails"> {{event.start}}</v-list-item-subtitle>
-                </v-list-item-content>
-                <v-list-item-icon>
-                  <v-icon class="chevron">mdi-chevron-right</v-icon>
-                </v-list-item-icon>
-              </v-list-item>
-              
-            </div>
-          </div>
-        </v-list-item-group>
-      </v-list>
-    </v-card>
-
-  </v-col>
-  
 
   </v-row>
   </v-container>
@@ -191,6 +258,8 @@ export default {
     model: 1,
     events: [],
     userEvents: [],
+    selectedEvent: null,
+    itemToDelete: null,
     organisationDetails: {
       name: null,
       description: null
@@ -214,6 +283,7 @@ export default {
   },
   beforeDestroy() {
     document.documentElement.style.overflow = 'auto';
+    console.log(this.itemToDelete)
   },
   methods: {
     saveProfile() {
@@ -260,8 +330,21 @@ export default {
         }
       }
       this.userEvents = list
-      console.log(this.userEvents)
-      
+    },
+    updateEvent() {
+      this.$store.dispatch('updateEvent', this.selectedEvent)
+      console.log(this.selectedEvent)
+    },
+    deleteEvent() {
+      this.$store.dispatch('deleteEvent', this.selectedEvent)
+    },
+    deleteItem() {
+      if (this.deleteItem == 'account') {
+        this.deleteAccount()
+      }
+      else if (this.deleteItem == 'event') {
+        this.deleteEvent()
+      }
     }
     
   }
@@ -335,7 +418,7 @@ export default {
      margin: 1rem;
      line-height: 6vh;
     }
-    input {
+    input, textarea {
       width: 100%;
       margin: 1rem;
       font-size: 16px;
@@ -408,7 +491,7 @@ export default {
       }
   }  
 }
-#delete-account-button {
+#delete-account-button, #delete-event-button {
   background: #b71c1c;
   &:hover {
       background: lighten(#b71c1c, 5%);
@@ -461,7 +544,10 @@ h2 {
 }
 .eventContent {
   padding: 0vh;
-}    
+} 
+#color {
+    height: 50px;
+}
   
   
 </style>

@@ -161,6 +161,30 @@ export default new Vuex.Store({
             });
             dispatch('fetchUserProfile', user)
             router.push('/login')
+        },
+        async updateEvent({ getters }, event) {
+            fb.eventsCollection.doc(event.id).update({
+                    name: event.name,
+                    start: event.start,
+                    end: event.end,
+                    starttime: event.starttime,
+                    endtime: event.endtime,
+                    description: event.description,
+                    location: event.location,
+                    meetinglink: event.meetinglink,
+                    contactemail: event.contactemail,
+                    color: event.color,
+                    organisation: getters.getUserID
+                })
+                .then(() => {
+                    alert("Event successfully updated")
+                })
+        },
+        async deleteEvent({}, event) {
+            fb.eventsCollection.doc(event.id).delete()
+                .then(() => {
+                    alert("Event successfully deleted")
+                })
         }
 
     },
