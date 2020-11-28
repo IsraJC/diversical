@@ -212,14 +212,14 @@
       max-width="290"
       id="delete-account-dialog">
       <v-card>
-        <v-card-title v-show="itemToDelete='account'" class="dialogTitle">
+        <v-card-title v-if="itemToDelete=='account'" class="dialogTitle">
           Delete Account
         </v-card-title>
-        <v-card-title v-show="itemToDelete='event'" class="dialogTitle">
+        <v-card-title v-else-if="itemToDelete=='event'" class="dialogTitle">
           Delete Event
         </v-card-title>
-        <v-card-text v-show="itemToDelete='account'" class="dialogText">Are you sure you want to delete your account?</v-card-text>
-        <v-card-text v-show="itemToDelete='event'" class="dialogText">Are you sure you want to delete this event?</v-card-text>
+        <v-card-text v-if="itemToDelete=='account'" class="dialogText">Are you sure you want to delete your account?<br/>This will also delete all of your events.</v-card-text>
+        <v-card-text v-else-if="itemToDelete=='event'" class="dialogText">Are you sure you want to delete this event?</v-card-text>
         <v-card-actions>
           <v-btn
             class="dialogButton"
@@ -309,6 +309,9 @@ export default {
         auth.signInWithEmailAndPassword(this.accountDetails.email, this.accountDetails.password)
         .then((user) => {
          this.$store.dispatch('deleteAccount');
+         for (var event of this.userEvents) {
+          this.$store.dispatch('deleteEvent', event, false)
+        }
       })
       .catch((error) => {
         this.dialog=false
@@ -336,13 +339,13 @@ export default {
       console.log(this.selectedEvent)
     },
     deleteEvent() {
-      this.$store.dispatch('deleteEvent', this.selectedEvent)
+      this.$store.dispatch('deleteEvent', this.selectedEvent, true)
     },
     deleteItem() {
-      if (this.deleteItem == 'account') {
+      if (this.itemToDelete == 'account') {
         this.deleteAccount()
       }
-      else if (this.deleteItem == 'event') {
+      else if (this.itemToDelete == 'event') {
         this.deleteEvent()
       }
     }
@@ -386,11 +389,16 @@ export default {
 
   .container {
     width:  100%;
-    height: 115vh;
+    height: 110%;
     margin: 0vh;
     margin-right: 0px;
     margin-top: -1vh;
     background-color: #EAEDE8;
+  }
+
+  .fill-height {
+    height: 100%;
+    padding-bottom: 5vh;
   }
 
   .content {

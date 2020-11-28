@@ -106,24 +106,28 @@ export default new Vuex.Store({
 
         async signup({ dispatch }, form) {
             // sign user up
-            const { user } = await fb.auth.createUserWithEmailAndPassword(form.email, form.password)
+            await fb.auth.createUserWithEmailAndPassword(form.email, form.password).then(function(user) {
+                // create user profile object in userCollections
+                fb.usersCollection.doc(auth().currentUser.uid).set({
+                    name: form.name,
+                    description: form.description,
+                    email: form.email
+                })
 
-            // create user profile object in userCollections
-            await fb.usersCollection.doc(user.uid).set({
-                name: form.name,
-                description: form.description,
-                email: form.email
+                // fetch user profile and set in state
+                dispatch('fetchUserProfile', user)
+
+                // change route to dashboard
+                if (router.currentRoute.path === '/login') {
+                    router.push('/')
+                }
+
+                alert("Account successfully created!")
+            }).catch(function(error) {
+                alert(error.message)
             })
 
-            // fetch user profile and set in state
-            dispatch('fetchUserProfile', user)
 
-            // change route to dashboard
-            if (router.currentRoute.path === '/login') {
-                router.push('/')
-            }
-
-            alert("Account successfully created!")
         },
 
         async logout({ commit }) {
@@ -132,7 +136,7 @@ export default new Vuex.Store({
             // clear userProfile and redirect to /login
             commit('setUserProfile', {})
             alert("Logged out successfully!")
-            router.push('/')
+            router.push('/login')
         },
 
         async saveProfile({ state, dispatch }, newProfile, user) {
@@ -153,14 +157,16 @@ export default new Vuex.Store({
             });
             dispatch('fetchUserProfile', user)
         },
-        async deleteAccount({ dispatch }) {
+        async deleteAccount({ getters }) {
+            const userID = auth().currentUser.uid
             auth().currentUser.delete().then(function() {
+                fb.usersCollection.doc(userID).delete()
                 alert("Account successfully deleted")
+                router.push('/login')
             }).catch(function(error) {
-                alert("An error occurred: " + error)
+                alert("An error occurred: " + error.message)
             });
-            dispatch('fetchUserProfile', user)
-            router.push('/login')
+
         },
         async updateEvent({ getters }, event) {
             fb.eventsCollection.doc(event.id).update({
@@ -180,10 +186,12 @@ export default new Vuex.Store({
                     alert("Event successfully updated")
                 })
         },
-        async deleteEvent({}, event) {
+        async deleteEvent({}, event, showDeleteConfirmation) {
             fb.eventsCollection.doc(event.id).delete()
                 .then(() => {
-                    alert("Event successfully deleted")
+                    if (showDeleteConfirmation) {
+                        alert("Event successfully deleted")
+                    }
                 })
         }
 
