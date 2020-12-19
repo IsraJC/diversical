@@ -49,7 +49,8 @@ export default new Vuex.Store({
                 meetinglink: event.meetinglink,
                 contactemail: event.contactemail,
                 color: event.color,
-                organisation: getters.getUserID
+                organisation: getters.getUserID.description,
+                tags: event.tags
             })
             alert("Event added successfully!")
         },
@@ -180,7 +181,8 @@ export default new Vuex.Store({
                     meetinglink: event.meetinglink,
                     contactemail: event.contactemail,
                     color: event.color,
-                    organisation: getters.getUserID
+                    organisation: getters.getUserID,
+                    tags: event.tags
                 })
                 .then(() => {
                     alert("Event successfully updated")

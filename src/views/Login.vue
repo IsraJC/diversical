@@ -8,7 +8,7 @@
           <h1>Welcome Back</h1>
           <div>
             <label for="email1">Email</label>
-            <input v-model.trim="loginForm.email" type="email" placeholder="You@email.com" id="email1" required/>
+            <input v-model.trim="loginForm.email" type="email" placeholder="yourname@email.com" id="email1" required/>
           </div>
           <div>
             <label for="password1">Password</label>

@@ -189,6 +189,21 @@
         </div>
         <div>
           <v-container class="formItemContainer">
+            <div class="formItemLabel"><label for="tags">Tags</label></div>
+            <div class="formItemInput"><b-form-tags 
+              id="tags-basic"
+              v-model="tags" 
+              separator=" ,;" 
+              remove-on-delete
+              tag-pills
+              size="lg"
+              tag-variant="primary"
+              placeholder="Add tag here"
+              ></b-form-tags></div>
+          </v-container>
+        </div>
+        <div>
+          <v-container class="formItemContainer">
             <div class="formItemLabel"><label for="color">Colour</label></div>
             <div class="formItemInput"><input v-model.trim="selectedEvent.color" type="color" :placeholder="selectedEvent.color" id="color" /></div>
           </v-container>
@@ -556,6 +571,5 @@ h2 {
 #color {
     height: 50px;
 }
-  
   
 </style>
