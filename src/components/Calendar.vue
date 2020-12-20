@@ -125,6 +125,16 @@
             <v-card-text v-if=selectedEvent.contactemail>
               Contact Email: <span v-html="selectedEvent.contactemail"></span>
             </v-card-text>
+            <v-card-text v-if=selectedEvent.tags>
+              Tags: <b-form-tags 
+              id="tags-basic-calendar"
+              v-model="selectedEvent.tags" 
+              disabled="true"
+              tag-pills
+              size="lg"
+              tag-variant="primary"
+              ></b-form-tags>
+            </v-card-text>
             <v-card-actions>
               <v-btn
                 text
@@ -216,6 +226,7 @@ export default {
       this.$refs.calendar.next()
     },
     showEvent ({ nativeEvent, event }) {
+      console.log(this.selectedEvent.tags)
       const open = () => {
         this.selectedEvent = event
         this.selectedElement = nativeEvent.target
@@ -275,6 +286,20 @@ export default {
       font-weight: normal;
     }
   }
-  
+  @import '../assets/tags.scss';  
+  #tags-basic-calendar {
+    font-size: 12px!important;
+    margin: 0 auto!important;
+    padding: 0!important;
+    display: inline-block!important;
+    border: none!important;
+    box-shadow: none!important;
+    width: fit-content!important;
+    clear: both!important;
+    .b-form-tags-input {
+      display: none!important;
+    }
+    
+  }
 
 </style>

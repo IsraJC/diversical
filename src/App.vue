@@ -65,7 +65,7 @@ $text-color: #2C302E;
 
 html, body {
   background-color: $bg-color;
-  height: 94vh;
+  height: fit-content;
 }
 
 #app {
@@ -74,7 +74,8 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: $text-color;
-  height: 94vh;
+  min-height: 100%;
+  height: fit-content;
 }
 #nav {
   

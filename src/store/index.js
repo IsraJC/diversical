@@ -49,9 +49,10 @@ export default new Vuex.Store({
                 meetinglink: event.meetinglink,
                 contactemail: event.contactemail,
                 color: event.color,
-                organisation: getters.getUserID.description,
+                organisation: getters.getUserID,
                 tags: event.tags
             })
+
             alert("Event added successfully!")
         },
 
@@ -190,11 +191,11 @@ export default new Vuex.Store({
         },
         async deleteEvent({}, event, showDeleteConfirmation) {
             fb.eventsCollection.doc(event.id).delete()
-                .then(() => {
-                    if (showDeleteConfirmation) {
-                        alert("Event successfully deleted")
-                    }
-                })
+            if (showDeleteConfirmation) {
+                alert("Event successfully deleted")
+            }
+            router.push('/account')
+
         }
 
     },

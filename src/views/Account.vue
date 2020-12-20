@@ -192,7 +192,7 @@
             <div class="formItemLabel"><label for="tags">Tags</label></div>
             <div class="formItemInput"><b-form-tags 
               id="tags-basic"
-              v-model="tags" 
+              v-model="selectedEvent.tags" 
               separator=" ,;" 
               remove-on-delete
               tag-pills
@@ -355,6 +355,7 @@ export default {
     },
     deleteEvent() {
       this.$store.dispatch('deleteEvent', this.selectedEvent, true)
+      this.dialog = false;
     },
     deleteItem() {
       if (this.itemToDelete == 'account') {
@@ -371,9 +372,6 @@ export default {
 
 
 <style lang="scss" scoped>
-
-  
-
   template {
     font-family: Avenir, Helvetica, Arial, sans-serif;
   }
@@ -404,16 +402,16 @@ export default {
 
   .container {
     width:  100%;
-    height: 110%;
+    height: 100%!important;
     margin: 0vh;
     margin-right: 0px;
     margin-top: -1vh;
     background-color: #EAEDE8;
+    padding-bottom: 0;
   }
 
   .fill-height {
-    height: 100%;
-    padding-bottom: 5vh;
+    min-height: 93.5vh!important;
   }
 
   .content {
@@ -421,13 +419,14 @@ export default {
     margin-left: auto;
     margin-right: auto;
     margin-top: 5vh;
+    margin-bottom: 5vh;
     width:  80%;
     padding: 1vh;
   }
 
   .nav-drawer {
     width: 100%!important;
-    height: 114vh!important;
+    height: 100%!important;
   }
 
   .form {
@@ -441,7 +440,7 @@ export default {
      margin: 1rem;
      line-height: 6vh;
     }
-    input, textarea {
+    input, textarea, .b-form-tags {
       width: 100%;
       margin: 1rem;
       font-size: 16px;
@@ -571,5 +570,8 @@ h2 {
 #color {
     height: 50px;
 }
-  
+#tags-basic { 
+  margin-bottom: 10px!important;
+}
+@import '../assets/tags.scss'  
 </style>

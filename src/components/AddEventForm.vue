@@ -106,41 +106,16 @@ export default {
   #color {
     height: 50px;
   }
-  @import '../assets/LoginFormSCSS/app.scss';
-
-  #tags-basic { 
-    display: block;
-    width: 100%;
-    height: 50px;
-    margin-bottom: 3rem;
-    font-size: 16px;
-    padding: 10px;
-    outline: 0;
-    border: 1px solid #e6ecf0;
-    border-radius: 3px;
-    background-color: #F5F5F5;
-    &:focus {
-        box-shadow: 0 0 5px 0 rgba($dark, 0.2);
-    }
-    .btn {
-        display: none;
-        &:focus {
-            display: none;
-        }
-    }
-    .b-form-tags-input {
-        &:focus {
-            box-shadow: none;
-        }
-        padding-left: 0.5rem!important;
-    }
-    .badge {
-        margin-right: 0.5rem;
-        background-color: grey;
-        color: white;
-    }
-    @import '../../node_modules/bootstrap/scss/bootstrap.scss';
-    @import '../../node_modules/bootstrap-vue/src/index.scss';
+  #addEventcol2 {
+    height: fit-content!important;
+    margin-bottom: 5vh!important;
   }
+  section {
+    height: fit-content!important;
+    margin-bottom: 5vh!important;
+  }
+  @import '../assets/LoginFormSCSS/app.scss';
+  @import '../assets/tags.scss';
+
 </style>
 
