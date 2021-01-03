@@ -1,6 +1,7 @@
 <template>
   <v-row class="ma-2 fill-height">
     <v-col>
+      
       <v-sheet height="64">
         <v-toolbar
           flat
@@ -39,6 +40,12 @@
             {{ $refs.calendar.title }}
           </v-toolbar-title>
           <v-spacer></v-spacer>
+          <div id="searchDiv">
+            <v-container id="searchContainer">
+              <v-text-field solo type="text" v-model.trim="searchText" placeholder="Search" id="searchText" prepend-inner-icon="mdi-magnify"/>
+            </v-container>
+          </div>
+          <v-spacer></v-spacer>
           <v-menu
             bottom
             right
@@ -73,7 +80,7 @@
           </v-menu>
         </v-toolbar>
       </v-sheet>
-      <v-sheet height="600">
+      <v-sheet height="600" class="calendarSheet">
         <v-calendar
           ref="calendar"
           v-model="focus"
@@ -184,16 +191,29 @@ export default {
     selectedElement: null,
     //Store if event card is open or not 
     selectedOpen: false,
-    //array of events to display
-    events: [],
     //new event dialog
-    dialog: false
+    dialog: false,
+    searchText: null,
+    events: []
   }),
   //gets called when the component is mounted
   mounted() {
-    this.getEvents();
+    this.events = this.getEvents();
     window.scrollTo(0,0);
     document.documentElement.style.overflow = 'hidden';
+  },
+  watch: {
+    searchText: function (val) {
+      if(val != null) {
+        if (val == "") {
+          this.getEvents()
+        }
+        this.getSearchedEvents()
+      }
+      else {
+        this.getEvents()
+      }
+    }
   },
   beforeDestroy() {
     document.documentElement.style.overflow = 'auto';
@@ -201,13 +221,13 @@ export default {
   methods: {
     async getEvents() {
       this.$store.dispatch('getEvents')
-      this.events = this.$store.getters.getEvents
+      let tempEvents = this.$store.getters.getEvents
       
-      for (event of this.events) {
+      for (event of tempEvents) {
         var user = await fb.usersCollection.doc(event.organisation).get()
         event.organisationName = user.data().name
       }
-      console.log(this.events)
+      this.events = tempEvents
     },
     viewDay ({ date }) {
       this.focus = date
@@ -273,6 +293,17 @@ export default {
     rnd (a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a
     },
+    async getSearchedEvents() {
+      let searchedEvents = []
+      let searchTextArray = this.searchText.toLowerCase().split(" ")
+      this.$store.dispatch('searchEvents', {searchArray: searchTextArray})
+      let tempEvents = this.$store.getters.getSearchedEvents
+       for (event of tempEvents) {
+        var user = await fb.usersCollection.doc(event.organisation).get()
+        event.organisationName = user.data().name
+      }
+      this.events = tempEvents
+    },
   }
 }
 </script>
@@ -301,5 +332,20 @@ export default {
     }
     
   }
+  @import '../assets/LoginFormSCSS/app.scss';
 
+  #searchText {
+    width: 110rem;
+  }
+  .v-text-field__details {
+      display: none;
+    }
+  #searchContainer {
+    width: 100%;
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+  .calendarSheet {
+    margin-top: 2rem;
+  }
 </style>

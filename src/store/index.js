@@ -10,7 +10,8 @@ export default new Vuex.Store({
     state: {
         events: [],
         userProfile: {},
-        userID: null
+        userID: null,
+        searchedEvents: []
     },
     getters: {
         getUser(state) {
@@ -21,6 +22,9 @@ export default new Vuex.Store({
         },
         getEvents(state) {
             return state.events
+        },
+        getSearchedEvents(state) {
+            return state.searchedEvents
         }
     },
     mutations: {
@@ -33,7 +37,10 @@ export default new Vuex.Store({
         },
         setUserID(state, val) {
             state.userID = val
-        }
+        },
+        setSearchedEvents(state, events) {
+            state.searchedEvents = events
+        },
     },
     actions: {
         async addEvent({ getters }, event) {
@@ -196,6 +203,51 @@ export default new Vuex.Store({
             }
             router.push('/account')
 
+        },
+        async searchEvents({ commit }, searchArray) {
+            let snapshot = await fb.eventsCollection.get()
+                //loop over snapshot and get each document
+            let events = []
+            snapshot.forEach(doc => {
+                    //data doesn't include ID
+                    let appData = doc.data();
+                    appData.id = doc.id;
+                    events.push(appData);
+                })
+                //sets events array in data to events array created in this method
+            let eventsSet = new Set()
+            for (item of events) {
+                var nameArray = item.name.toLowerCase().split(" ")
+                for (word in nameArray) {
+                    if (searchArray.includes(word)) {
+                        eventsSet.add(item)
+                    }
+                }
+                var descArray = item.description.toLowerCase().split(" ")
+                for (word in descArray) {
+                    if (searchArray.includes(word)) {
+                        eventsSet.add(item)
+                    }
+                }
+                var tags = item.tags
+                if (tags.length > 0) {
+                    for (tag in tags) {
+                        if (searchArray.includes(tag.toLowerCase())) {
+                            eventsSet.add(item)
+                        }
+                    }
+                }
+                var locationArray = item.location.toLowerCase().split(" ")
+                if (locationArray.length > 0) {
+                    for (word in locationArray) {
+                        if (searchArray.includes(word)) {
+                            eventsSet.add(item)
+                        }
+                    }
+                }
+            }
+            let searchedEvents = Array.from(eventsSet)
+            commit('setSearchedEvents', searchedEvents)
         }
 
     },
