@@ -205,6 +205,8 @@ export default new Vuex.Store({
 
         },
         async searchEvents({ commit }, searchArray) {
+            var tempArray = Array.from(Object.values(searchArray))
+            searchArray = JSON.stringify(tempArray)
             let snapshot = await fb.eventsCollection.get()
                 //loop over snapshot and get each document
             let events = []
@@ -216,35 +218,49 @@ export default new Vuex.Store({
                 })
                 //sets events array in data to events array created in this method
             let eventsSet = new Set()
-            for (item of events) {
+            for (var item of events) {
                 var nameArray = item.name.toLowerCase().split(" ")
-                for (word in nameArray) {
+                for (var word of nameArray) {
                     if (searchArray.includes(word)) {
+                        //console.log("name")
                         eventsSet.add(item)
                     }
                 }
                 var descArray = item.description.toLowerCase().split(" ")
-                for (word in descArray) {
+                for (var word of descArray) {
                     if (searchArray.includes(word)) {
+                        //console.log("desc")
                         eventsSet.add(item)
                     }
                 }
                 var tags = item.tags
                 if (tags.length > 0) {
-                    for (tag in tags) {
+                    for (var tag of tags) {
                         if (searchArray.includes(tag.toLowerCase())) {
+                            //console.log(tag + " found in " + searchArray)
                             eventsSet.add(item)
                         }
                     }
                 }
                 var locationArray = item.location.toLowerCase().split(" ")
                 if (locationArray.length > 0) {
-                    for (word in locationArray) {
+                    for (var word of locationArray) {
                         if (searchArray.includes(word)) {
+                            //console.log("location")
                             eventsSet.add(item)
                         }
                     }
                 }
+                var user = await fb.usersCollection.doc(item.organisation).get()
+                item.organisationName = user.data().name
+                var orgNameArray = item.organisationName.toLowerCase().split(" ")
+                for (var word of orgNameArray) {
+                    if (searchArray.includes(word)) {
+                        //console.log("organisation name")
+                        eventsSet.add(item)
+                    }
+                }
+                //console.log(eventsSet)
             }
             let searchedEvents = Array.from(eventsSet)
             commit('setSearchedEvents', searchedEvents)

@@ -208,7 +208,10 @@ export default {
         if (val == "") {
           this.getEvents()
         }
-        this.getSearchedEvents()
+        else {
+          this.getSearchedEvents()
+        }
+        
       }
       else {
         this.getEvents()
@@ -294,14 +297,10 @@ export default {
       return Math.floor((b - a + 1) * Math.random()) + a
     },
     async getSearchedEvents() {
-      let searchedEvents = []
       let searchTextArray = this.searchText.toLowerCase().split(" ")
-      this.$store.dispatch('searchEvents', {searchArray: searchTextArray})
-      let tempEvents = this.$store.getters.getSearchedEvents
-       for (event of tempEvents) {
-        var user = await fb.usersCollection.doc(event.organisation).get()
-        event.organisationName = user.data().name
-      }
+      await this.$store.dispatch('searchEvents', {searchArray: searchTextArray})
+      let tempEvents = await this.$store.getters.getSearchedEvents
+      console.log(searchTextArray)
       this.events = tempEvents
     },
   }
