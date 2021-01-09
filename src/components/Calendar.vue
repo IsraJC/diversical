@@ -300,7 +300,6 @@ export default {
       let searchTextArray = this.searchText.toLowerCase().split(" ")
       await this.$store.dispatch('searchEvents', {searchArray: searchTextArray})
       let tempEvents = await this.$store.getters.getSearchedEvents
-      console.log(searchTextArray)
       this.events = tempEvents
     },
   }

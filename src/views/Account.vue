@@ -12,9 +12,15 @@
       >
         <v-list>
           <v-list-item>
-            <v-list-item-avatar size="50" class="avatar">
-              <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
-            </v-list-item-avatar>
+            <div class="avatar-upload">
+              <div class="avatar-edit">
+                <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" @change="uploadImage"/>
+                <label for="imageUpload"><v-icon>mdi-pencil</v-icon></label>
+              </div>
+              <v-list-item-avatar size="100" class="avatar">
+                <v-img v-bind:src='organisationDetails.logo'></v-img>
+              </v-list-item-avatar>
+            </div>
           </v-list-item>
 
           <v-list-item>
@@ -74,7 +80,7 @@
           </v-container>
         </div>
         <div class="clearfix">
-          <button @click="saveProfile()" class="button buttonRight" id="save-button">Save</button>
+          <button @click="saveProfile(true)" class="button buttonRight" id="save-button">Save</button>
         </div>
       </form>
     </v-card>
@@ -277,7 +283,8 @@ export default {
     itemToDelete: null,
     organisationDetails: {
       name: null,
-      description: null
+      description: null,
+      logo: null,
     },
     accountDetails: {
       email: null,
@@ -301,8 +308,8 @@ export default {
     console.log(this.itemToDelete)
   },
   methods: {
-    saveProfile() {
-      this.$store.dispatch('saveProfile', this.organisationDetails, this.user)
+    saveProfile(showAlert) {
+      this.$store.dispatch('saveProfile', this.organisationDetails, this.user, showAlert)
     },
     saveDetails() {
       if (this.accountDetails.password == null || this.accountDetails.confirmPassword == null) {
@@ -364,8 +371,16 @@ export default {
       else if (this.itemToDelete == 'event') {
         this.deleteEvent()
       }
+    },
+    uploadImage(e) {
+      const image = e.target.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(image);
+      reader.onload = e =>{
+          this.organisationDetails.logo = e.target.result;
+      };
+      this.saveProfile(false);
     }
-    
   }
 }
 </script>
@@ -573,5 +588,48 @@ h2 {
 #tags-basic { 
   margin-bottom: 10px!important;
 }
-@import '../assets/tags.scss'  
+@import '../assets/tags.scss';
+.avatar-upload {
+    position: relative;
+    max-width: 15vh;
+    margin: 1rem auto;
+    .avatar-edit {
+        position: absolute;
+        right: 0.5rem;
+        z-index: 1;
+        bottom: 0.5rem;
+        input {
+            display: none;
+            + label {
+                margin: 0;
+                display: inline-block;
+                width: 3.5rem;
+                height: 3.5rem;
+                border-radius: 100%;
+                background: #FFFFFF;
+                border: 1px solid transparent;
+                box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+                cursor: pointer;
+                font-weight: normal;
+                transition: all .2s ease-in-out;
+                &:hover {
+                    background: #f1f1f1;
+                    border-color: #d6d6d6;
+                }
+                &:after {
+                    color: #757575;
+                    position: absolute;
+                    text-align: center;
+                    margin: auto;
+                }
+                .v-icon {
+                  position: relative;
+                  padding-top: 0.5rem;
+                  margin: 0 auto;
+                  align-self: center;
+                }
+            }
+        }
+    }
+}  
 </style>

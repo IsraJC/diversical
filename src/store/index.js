@@ -120,7 +120,8 @@ export default new Vuex.Store({
                 fb.usersCollection.doc(auth().currentUser.uid).set({
                     name: form.name,
                     description: form.description,
-                    email: form.email
+                    email: form.email,
+                    logo: 'https://api.iconify.design/mdi-account-circle.svg'
                 })
 
                 // fetch user profile and set in state
@@ -148,11 +149,13 @@ export default new Vuex.Store({
             router.push('/login')
         },
 
-        async saveProfile({ state, dispatch }, newProfile, user) {
+        async saveProfile({ state, dispatch }, newProfile, user, showAlert) {
             fb.usersCollection.doc(state.userID)
-                .update({ name: newProfile.name, description: newProfile.description })
+                .update({ name: newProfile.name, description: newProfile.description, logo: newProfile.logo })
                 .then(() => {
-                    alert("Profile successfully saved")
+                    if (showAlert) {
+                        alert("Profile successfully saved")
+                    }
                 })
             dispatch('fetchUserProfile', user)
         },
