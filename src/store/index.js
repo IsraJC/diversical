@@ -102,8 +102,8 @@ export default new Vuex.Store({
         async fetchUserProfile({ commit }, user) {
             // fetch user profile
             const userProfile = await fb.usersCollection.doc(user.uid).get()
-
-            // set user profile in state
+            console.log(userProfile)
+                // set user profile in state
             commit('setUserProfile', userProfile.data())
             commit('setUserID', user.uid)
 
@@ -239,16 +239,17 @@ export default new Vuex.Store({
                 var tags = item.tags
                 if (tags.length > 0) {
                     for (var tag of tags) {
-                        if (searchArray.includes(tag.toLowerCase())) {
+                        if (searchArray.includes(tag.toLowerCase()) && tag != "") {
                             //console.log(tag + " found in " + searchArray)
                             eventsSet.add(item)
                         }
                     }
                 }
                 var locationArray = item.location.toLowerCase().split(" ")
+                console.log(locationArray)
                 if (locationArray.length > 0) {
                     for (var word of locationArray) {
-                        if (searchArray.includes(word)) {
+                        if (searchArray.includes(word) && word != "") {
                             //console.log("location")
                             eventsSet.add(item)
                         }

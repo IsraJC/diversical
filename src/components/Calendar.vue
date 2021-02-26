@@ -108,6 +108,9 @@
               :color="selectedEvent.color"
               dark
             >
+              <v-list-item-avatar size="50" class="avatar">
+                <v-img v-bind:src='selectedEvent.logo'></v-img>
+              </v-list-item-avatar>
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
               <!-- <v-btn icon>
@@ -229,6 +232,7 @@ export default {
       for (event of tempEvents) {
         var user = await fb.usersCollection.doc(event.organisation).get()
         event.organisationName = user.data().name
+        event.logo = user.data().logo
       }
       this.events = tempEvents
     },
