@@ -304,6 +304,11 @@ export default {
       let searchTextArray = this.searchText.toLowerCase().split(" ")
       await this.$store.dispatch('searchEvents', {searchArray: searchTextArray})
       let tempEvents = await this.$store.getters.getSearchedEvents
+       for (event of tempEvents) {
+        var user = await fb.usersCollection.doc(event.organisation).get()
+        event.organisationName = user.data().name
+        event.logo = user.data().logo
+      }
       this.events = tempEvents
     },
   }

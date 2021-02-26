@@ -264,7 +264,7 @@ export default new Vuex.Store({
                         eventsSet.add(item)
                     }
                 }
-                //console.log(eventsSet)
+                console.log(eventsSet)
             }
             let searchedEvents = Array.from(eventsSet)
             commit('setSearchedEvents', searchedEvents)
