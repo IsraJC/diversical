@@ -32,6 +32,7 @@
 import { mapState } from 'vuex'
 import * as firebase from 'firebase/app'
 
+
 export default {
   data () {
     return {

@@ -164,6 +164,7 @@
 <script>
 import { db } from '@/firebase.js'
 import * as fb from '../firebase.js'
+import {eventBus} from "../main.js";
 
 export default {
   data: () => ({
@@ -199,11 +200,24 @@ export default {
     searchText: null,
     events: []
   }),
+  created(){
+   
+  },
   //gets called when the component is mounted
   mounted() {
     this.events = this.getEvents();
     window.scrollTo(0,0);
     document.documentElement.style.overflow = 'hidden';
+    eventBus.$once('goToCalendar', clickedEvent => {
+      console.log("Yes")
+      console.log("focus is " + this.focus)
+      this.focus = moment(clickedEvent.start).format('YYYY-MM-DD')
+      console.log("focus is " + this.focus)
+      this.viewDay(moment(clickedEvent.start).format('YYYY-MM-DD'))
+      this.updateRange()
+      this.selectedEvent = clickedEvent
+      this.showEvent;
+    })
   },
   watch: {
     searchText: function (val) {
@@ -237,6 +251,7 @@ export default {
       this.events = tempEvents
     },
     viewDay ({ date }) {
+      console.log("ViewDay called with the date " + date)
       this.focus = date
       this.type = 'day'
     },

@@ -132,7 +132,7 @@
               <v-list-item @click="selectedEvent=event ; view='Edit Event'"> 
                 <v-list-item-content class="eventContent">
                   <v-list-item-title class="eventTitle">{{ event.name }}</v-list-item-title>
-                  <v-list-item-subtitle class="eventDetails"> {{event.start}}</v-list-item-subtitle>
+                  <v-list-item-subtitle class="eventDetails"> {{moment(event.start).format('dddd Do MMMM hh:mm A')}}</v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-icon>
                   <v-icon class="chevron">mdi-chevron-right</v-icon>

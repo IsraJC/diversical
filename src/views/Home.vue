@@ -9,7 +9,7 @@
           show-arrows-on-hover
         >
           <v-carousel-item
-            v-for="(slide, i) in slides"
+            v-for="(event, i) in events"
             :key="i"
           >
             <v-sheet
@@ -21,8 +21,19 @@
                 align="center"
                 justify="center"
               >
-                <div class="display-3">
-                  {{ slide }} Event
+                <div class="carousel">
+                  <v-avatar size="80" class="avatar">
+                    <v-img v-bind:src='event.logo'></v-img>
+                  </v-avatar>
+                  <h1 @click="goToCalendar(event)">{{ event.name }}</h1>
+                  <p class="desc">
+                    {{event.description}}<br/>
+                  </p>
+                  <p class="details"> 
+                    Starts: {{event.startDisplay}}<br/>
+                    Ends: {{event.endDisplay}}<br/><br/>
+                    <div v-if=event.location>Location: {{event.location}}<br/> </div>
+                  </p>
                 </div>
               </v-row>
             </v-sheet>
@@ -46,6 +57,10 @@
 </template> 
 
 <script>
+import * as fb from '../firebase.js'
+import moment from 'moment'
+import router from '../router/index.js'
+import {eventBus} from "../main.js";
 export default {
   data () {
     return {
@@ -63,6 +78,30 @@ export default {
         'Fourth',
         'Fifth',
       ],
+      events: [],
+    }
+  },
+  mounted() {
+    this.events = this.getEvents();
+    window.scrollTo(0,0);
+  },
+  methods: {
+    async getEvents() {
+      this.$store.dispatch('getEvents')
+      let tempEvents = this.$store.getters.getEvents
+      
+      for (event of tempEvents) {
+        var user = await fb.usersCollection.doc(event.organisation).get()
+        event.organisationName = user.data().name
+        event.logo = user.data().logo
+        event.startDisplay = moment(event.start).format('dddd Do MMMM hh:mm A')
+        event.endDisplay = moment(event.end).format('dddd Do MMMM hh:mm A')
+      }
+      this.events = tempEvents
+    },
+    goToCalendar(event) {
+      eventBus.$emit('goToCalendar', event);
+      router.push('/calendar')
     }
   }
 }
@@ -89,7 +128,7 @@ export default {
   } 
   p {
     font-size: 18px;
-    text-align: right;
+    text-align: center;
     position: relative;
     top: 10%;
     padding-left: 20px;
@@ -99,6 +138,26 @@ export default {
     margin: 20px;
     padding-top: 20px;
     height: 100%
+  }
+  .carousel {
+    h1 {
+      font-size: 4rem;
+      text-align: center;
+      padding: 2rem;
+      margin: 1rem;
+    }
+    p {
+      text-align: center;
+      padding: 2rem;
+      padding-top: 0rem;
+      margin: 1rem;
+    }
+    .desc {
+        font-size: 2rem;
+    }
+    .details {
+      font-size: 1.5rem;  
+    }
   }
   #col-md-6 {
     margin-top: -100px;
